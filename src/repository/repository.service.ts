@@ -4,7 +4,7 @@ import { User } from '../user/interfaces/user.interface';
 import { Track } from '../track/interfaces/track.interface';
 import { Artist } from '../artist/interfaces/artist.interface';
 import { Album } from '../album/interfaces/album.interface';
-import { Favorites } from '../app.interface';
+import { Favorites } from '../favs/interfaces/favs.interface';
 
 @Injectable()
 export class RepositoryService {
@@ -63,7 +63,15 @@ export class RepositoryService {
   }
 
   async deleteTrack(id: string): Promise<boolean> {
-    return this.tracks.delete(id);
+    const isDeleted = this.tracks.delete(id);
+    console.log(this.tracks);
+    if (isDeleted) {
+      this.favorites.tracks = this.favorites.tracks.filter(
+        (trackId) => trackId !== id,
+      );
+    }
+
+    return isDeleted;
   }
 
   async createArtist(artist: Artist): Promise<Artist> {
@@ -87,7 +95,29 @@ export class RepositoryService {
   }
 
   async deleteArtist(id: string): Promise<boolean> {
-    return this.artists.delete(id);
+    const isDeleted = this.artists.delete(id);
+
+    if (isDeleted) {
+      for (const album of this.albums.values()) {
+        if (album.artistId === id) {
+          album.artistId = null;
+          this.albums.set(album.id, album);
+        }
+      }
+
+      for (const track of this.tracks.values()) {
+        if (track.artistId === id) {
+          track.artistId = null;
+          this.tracks.set(track.id, track);
+        }
+      }
+
+      this.favorites.artists = this.favorites.artists.filter(
+        (artistId) => artistId !== id,
+      );
+    }
+
+    return isDeleted;
   }
 
   async createAlbum(album: Album): Promise<Album> {
@@ -111,22 +141,63 @@ export class RepositoryService {
   }
 
   async deleteAlbum(id: string): Promise<boolean> {
-    return this.albums.delete(id);
+    const isDeleted = this.albums.delete(id);
+
+    if (isDeleted) {
+      for (const track of this.tracks.values()) {
+        if (track.albumId === id) {
+          track.albumId = null;
+          this.tracks.set(track.id, track);
+        }
+      }
+
+      this.favorites.albums = this.favorites.albums.filter(
+        (albumId) => albumId !== id,
+      );
+    }
+
+    return isDeleted;
   }
 
-  // getFavorites(): Favorites {
-  //   return this.favorites;
-  // }
-  //
-  // addToFavorites(type: keyof Favorites, id: string): void {
-  //   if (this.favorites[type]) {
-  //     this.favorites[type].push(id);
-  //   }
-  // }
-  //
-  // removeFromFavorites(type: keyof Favorites, id: string): void {
-  //   if (this.favorites[type]) {
-  //     this.favorites[type] = this.favorites[type].filter(itemId => itemId !== id);
-  //   }
-  // }
+  async addTrack(id: string): Promise<Track> {
+    await this.favorites.tracks.push(id);
+
+    return this.findOneTrackById(id);
+  }
+
+  async removeTrack(id: string): Promise<boolean> {
+    const index = await this.favorites.tracks.indexOf(id);
+
+    return index !== -1
+      ? await !!this.favorites.tracks.splice(index, 1)
+      : false;
+  }
+
+  async addArtist(id: string): Promise<Artist> {
+    await this.favorites.artists.push(id);
+
+    return this.findOneArtistById(id);
+  }
+
+  async removeArtist(id: string): Promise<boolean> {
+    const index = await this.favorites.artists.indexOf(id);
+
+    return index !== -1
+      ? await !!this.favorites.artists.splice(index, 1)
+      : false;
+  }
+
+  async addAlbum(id: string): Promise<Album> {
+    await this.favorites.albums.push(id);
+
+    return this.findOneAlbumById(id);
+  }
+
+  async removeAlbum(id: string): Promise<boolean> {
+    const index = await this.favorites.albums.indexOf(id);
+
+    return index !== -1
+      ? await !!this.favorites.albums.splice(index, 1)
+      : false;
+  }
 }
