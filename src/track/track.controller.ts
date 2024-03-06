@@ -5,7 +5,9 @@ import {
   Body,
   Put,
   Param,
-  Delete, HttpCode, HttpStatus,
+  Delete,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 
 import { TrackService } from './track.service';
@@ -19,9 +21,9 @@ export class TrackController {
   constructor(private readonly trackService: TrackService) {}
 
   @Post()
-  async create(@Body() dto: TrackDto): Promise<Track> {
+  async create(@Body() trackDto: TrackDto): Promise<Track> {
     try {
-      return await this.trackService.create(dto);
+      return await this.trackService.create(trackDto);
     } catch (error) {
       throw error;
     }
@@ -50,13 +52,16 @@ export class TrackController {
   }
 
   @Put(':id')
-  async update(@Param() { id }: Uuid, @Body() dto: TrackDto): Promise<Track> {
+  async update(
+    @Param() { id }: Uuid,
+    @Body() trackDto: TrackDto,
+  ): Promise<Track> {
     try {
       const track = await this.trackService.findOne(id);
 
       if (!track) throw new NotFoundError();
 
-      return await this.trackService.update(track, dto);
+      return await this.trackService.update(track, trackDto);
     } catch (error) {
       throw error;
     }

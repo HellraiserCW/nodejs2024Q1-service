@@ -6,7 +6,9 @@ import {
   ValidateIf,
 } from 'class-validator';
 
-export class TrackDto {
+import { CreateTrack } from '../interfaces/track.interface';
+
+export class TrackDto implements CreateTrack {
   @IsNotEmpty()
   @IsString()
   name: string;

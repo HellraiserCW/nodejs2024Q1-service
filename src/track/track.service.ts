@@ -10,11 +10,9 @@ export class TrackService {
   constructor(private readonly repositoryService: RepositoryService) {}
 
   async create(dto: TrackDto): Promise<Track> {
-    const id = uuidv4();
-
     return await this.repositoryService.createTrack({
       ...dto,
-      id,
+      id: uuidv4(),
     });
   }
 

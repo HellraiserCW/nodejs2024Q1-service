@@ -5,3 +5,5 @@ export interface Track {
   albumId: string | null;
   duration: number;
 }
+
+export type CreateTrack = Omit<Track, 'id'>;

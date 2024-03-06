@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { RepositoryModule } from './repository/repository.module';
 import { TrackModule } from './track/track.module';
+import { ArtistModule } from './artist/artist.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { TrackModule } from './track/track.module';
     UserModule,
     RepositoryModule,
     TrackModule,
+    ArtistModule,
   ],
 })
 export class AppModule {}

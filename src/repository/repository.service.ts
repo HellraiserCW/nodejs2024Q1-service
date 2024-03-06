@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 
 import { User } from '../user/interfaces/user.interface';
 import { Track } from '../track/interfaces/track.interface';
-import { Album, Artist, Favorites } from '../app.interface';
+import { Artist } from '../artist/interfaces/artist.interface';
+import { Album, Favorites } from '../app.interface';
 
 @Injectable()
 export class RepositoryService {
@@ -64,14 +65,29 @@ export class RepositoryService {
     return this.tracks.delete(id);
   }
 
-  // createArtist(artist: Artist): Artist {
-  //   const id = uuidv4();
-  //   const newArtist = { ...artist, id };
-  //   this.artists.set(id, newArtist);
-  //   return newArtist;
-  // }
+  async createArtist(artist: Artist): Promise<Artist> {
+    this.artists.set(artist.id, artist);
 
-  // Implement similar methods for other entities (Artist, Track, Album)
+    return artist;
+  }
+
+  async findAllArtists(): Promise<Artist[]> {
+    return Array.from(this.artists.values());
+  }
+
+  async findOneArtistById(id: string): Promise<Artist | undefined> {
+    return this.artists.get(id);
+  }
+
+  async updateArtist(artist: Artist): Promise<Artist> {
+    this.artists.set(artist.id, artist);
+
+    return artist;
+  }
+
+  async deleteArtist(id: string): Promise<boolean> {
+    return this.artists.delete(id);
+  }
 
   // getFavorites(): Favorites {
   //   return this.favorites;
