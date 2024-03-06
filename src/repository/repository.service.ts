@@ -3,7 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { User } from '../user/interfaces/user.interface';
 import { Track } from '../track/interfaces/track.interface';
 import { Artist } from '../artist/interfaces/artist.interface';
-import { Album, Favorites } from '../app.interface';
+import { Album } from '../album/interfaces/album.interface';
+import { Favorites } from '../app.interface';
 
 @Injectable()
 export class RepositoryService {
@@ -87,6 +88,30 @@ export class RepositoryService {
 
   async deleteArtist(id: string): Promise<boolean> {
     return this.artists.delete(id);
+  }
+
+  async createAlbum(album: Album): Promise<Album> {
+    this.albums.set(album.id, album);
+
+    return album;
+  }
+
+  async findAllAlbums(): Promise<Album[]> {
+    return Array.from(this.albums.values());
+  }
+
+  async findOneAlbumById(id: string): Promise<Album | undefined> {
+    return this.albums.get(id);
+  }
+
+  async updateAlbum(album: Album): Promise<Album> {
+    this.albums.set(album.id, album);
+
+    return album;
+  }
+
+  async deleteAlbum(id: string): Promise<boolean> {
+    return this.albums.delete(id);
   }
 
   // getFavorites(): Favorites {

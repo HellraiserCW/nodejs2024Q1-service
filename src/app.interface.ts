@@ -1,12 +1,6 @@
 import { Track } from './track/interfaces/track.interface';
 import { Artist } from './artist/interfaces/artist.interface';
-
-export interface Album {
-  id: string;
-  name: string;
-  year: number;
-  artistId: string | null;
-}
+import { Album } from './album/interfaces/album.interface';
 
 export interface Favorites {
   artists: string[];
