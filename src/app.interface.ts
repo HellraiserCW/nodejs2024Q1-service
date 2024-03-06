@@ -1,15 +1,9 @@
+import { Track } from './track/interfaces/track.interface';
+
 export interface Artist {
   id: string;
   name: string;
   grammy: boolean;
-}
-
-export interface Track {
-  id: string;
-  name: string;
-  artistId: string | null;
-  albumId: string | null;
-  duration: number;
 }
 
 export interface Album {

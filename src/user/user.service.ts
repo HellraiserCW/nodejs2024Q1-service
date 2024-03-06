@@ -10,19 +10,18 @@ export class UserService {
   constructor(private readonly repositoryService: RepositoryService) {}
 
   async create(dto: CreateUserDto): Promise<User> {
-    const id = uuidv4();
     const createdAt = Date.now();
 
     return await this.repositoryService.createUser({
       ...dto,
-      id,
+      id: uuidv4(),
       version: 1,
       createdAt,
       updatedAt: createdAt,
     });
   }
 
-  async findAll(): Promise<Map<string, User>> {
+  async findAll(): Promise<User[]> {
     return await this.repositoryService.findAllUsers();
   }
 

@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 
 import { User } from '../user/interfaces/user.interface';
-import { Album, Artist, Favorites, Track } from '../app.interfaces';
+import { Track } from '../track/interfaces/track.interface';
+import { Album, Artist, Favorites } from '../app.interface';
 
 @Injectable()
 export class RepositoryService {
   private users: Map<string, User> = new Map();
-  private artists: Map<string, Artist> = new Map();
   private tracks: Map<string, Track> = new Map();
+  private artists: Map<string, Artist> = new Map();
   private albums: Map<string, Album> = new Map();
   private favorites: Favorites = {
     artists: [],
@@ -21,8 +22,8 @@ export class RepositoryService {
     return user;
   }
 
-  async findAllUsers(): Promise<Map<string, User>> {
-    return this.users;
+  async findAllUsers(): Promise<User[]> {
+    return Array.from(this.users.values());
   }
 
   async findOneUserById(id: string): Promise<User | undefined> {
@@ -37,6 +38,30 @@ export class RepositoryService {
 
   async deleteUser(id: string): Promise<boolean> {
     return this.users.delete(id);
+  }
+
+  async createTrack(track: Track): Promise<Track> {
+    this.tracks.set(track.id, track);
+
+    return track;
+  }
+
+  async findAllTracks(): Promise<Track[]> {
+    return Array.from(this.tracks.values());
+  }
+
+  async findOneTrackById(id: string): Promise<Track | undefined> {
+    return this.tracks.get(id);
+  }
+
+  async updateTrack(track: Track): Promise<Track> {
+    this.tracks.set(track.id, track);
+
+    return track;
+  }
+
+  async deleteTrack(id: string): Promise<boolean> {
+    return this.tracks.delete(id);
   }
 
   // createArtist(artist: Artist): Artist {

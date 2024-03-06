@@ -38,9 +38,9 @@ export class UserController {
   @Get()
   async findAll(): Promise<UserEntity[]> {
     try {
-      const usersMap = await this.userService.findAll();
+      const users = await this.userService.findAll();
 
-      return Array.from(usersMap.values()).map((user) => new UserEntity(user));
+      return users.map((user) => new UserEntity(user));
     } catch (error) {
       throw error;
     }
