@@ -12,35 +12,35 @@ export class FavsService {
 
   async findAll(): Promise<FavoritesResponse> {
     const [artists, albums, tracks] = await Promise.all([
-      this.repositoryService.findAllArtists(),
-      this.repositoryService.findAllAlbums(),
-      this.repositoryService.findAllTracks(),
+      this.repositoryService.findFavArtists(),
+      this.repositoryService.findFavAlbums(),
+      this.repositoryService.findFavTracks(),
     ]);
 
     return { artists, albums, tracks };
   }
 
   async addTrack(id: string): Promise<Track> {
-    return this.repositoryService.addTrack(id);
+    return this.repositoryService.addTrackToFav(id);
   }
 
   async removeTrack(id: string): Promise<boolean> {
-    return this.repositoryService.removeTrack(id);
+    return this.repositoryService.removeTrackFromFav(id);
   }
 
   async addArtist(id: string): Promise<Artist> {
-    return this.repositoryService.addArtist(id);
+    return this.repositoryService.addArtistToFav(id);
   }
 
   async removeArtist(id: string): Promise<boolean> {
-    return this.repositoryService.removeArtist(id);
+    return this.repositoryService.removeArtistFromFav(id);
   }
 
   async addAlbum(id: string): Promise<Album> {
-    return this.repositoryService.addAlbum(id);
+    return this.repositoryService.addAlbumToFav(id);
   }
 
   async removeAlbum(id: string): Promise<boolean> {
-    return this.repositoryService.removeAlbum(id);
+    return this.repositoryService.removeAlbumFromFav(id);
   }
 }

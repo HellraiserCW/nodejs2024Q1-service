@@ -64,7 +64,6 @@ export class RepositoryService {
 
   async deleteTrack(id: string): Promise<boolean> {
     const isDeleted = this.tracks.delete(id);
-    console.log(this.tracks);
     if (isDeleted) {
       this.favorites.tracks = this.favorites.tracks.filter(
         (trackId) => trackId !== id,
@@ -159,45 +158,57 @@ export class RepositoryService {
     return isDeleted;
   }
 
-  async addTrack(id: string): Promise<Track> {
-    await this.favorites.tracks.push(id);
+  async findFavTracks(): Promise<Track[]> {
+    return this.favorites.tracks
+      .map((trackId) => this.tracks.get(trackId))
+      .filter((track) => !!track);
+  }
+
+  async addTrackToFav(id: string): Promise<Track> {
+    this.favorites.tracks.push(id);
 
     return this.findOneTrackById(id);
   }
 
-  async removeTrack(id: string): Promise<boolean> {
-    const index = await this.favorites.tracks.indexOf(id);
+  async removeTrackFromFav(id: string): Promise<boolean> {
+    const index = this.favorites.tracks.indexOf(id);
 
-    return index !== -1
-      ? await !!this.favorites.tracks.splice(index, 1)
-      : false;
+    return index !== -1 ? !!this.favorites.tracks.splice(index, 1) : false;
   }
 
-  async addArtist(id: string): Promise<Artist> {
-    await this.favorites.artists.push(id);
+  async findFavArtists(): Promise<Artist[]> {
+    return this.favorites.artists
+      .map((artistId) => this.artists.get(artistId))
+      .filter((artist) => !!artist);
+  }
+
+  async addArtistToFav(id: string): Promise<Artist> {
+    this.favorites.artists.push(id);
 
     return this.findOneArtistById(id);
   }
 
-  async removeArtist(id: string): Promise<boolean> {
-    const index = await this.favorites.artists.indexOf(id);
+  async removeArtistFromFav(id: string): Promise<boolean> {
+    const index = this.favorites.artists.indexOf(id);
 
-    return index !== -1
-      ? await !!this.favorites.artists.splice(index, 1)
-      : false;
+    return index !== -1 ? !!this.favorites.artists.splice(index, 1) : false;
   }
 
-  async addAlbum(id: string): Promise<Album> {
-    await this.favorites.albums.push(id);
+  async findFavAlbums(): Promise<Album[]> {
+    return this.favorites.albums
+      .map((albumId) => this.albums.get(albumId))
+      .filter((album) => !!album);
+  }
+
+  async addAlbumToFav(id: string): Promise<Album> {
+    this.favorites.albums.push(id);
 
     return this.findOneAlbumById(id);
   }
 
-  async removeAlbum(id: string): Promise<boolean> {
-    const index = await this.favorites.albums.indexOf(id);
+  async removeAlbumFromFav(id: string): Promise<boolean> {
+    const index = this.favorites.albums.indexOf(id);
 
-    return index !== -1
-      ? await !!this.favorites.albums.splice(index, 1)
-      : false;
+    return index !== -1 ? !!this.favorites.albums.splice(index, 1) : false;
   }
 }
