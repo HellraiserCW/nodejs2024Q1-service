@@ -1,12 +1,12 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Param,
+  Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
+  Param,
+  Post,
   Put,
 } from '@nestjs/common';
 
@@ -15,6 +15,7 @@ import { ArtistDto } from './dto/artist.dto';
 import { Uuid } from '../app.validators';
 import { Artist } from './interfaces/artist.interface';
 import { NotFoundError } from '../app.errors';
+import { Entity } from '../app.config';
 
 @Controller('artist')
 export class ArtistController {
@@ -43,7 +44,7 @@ export class ArtistController {
     try {
       const artist = await this.artistService.findOne(id);
 
-      if (!artist) throw new NotFoundError();
+      if (!artist) throw new NotFoundError(Entity.Artist);
 
       return artist;
     } catch (error) {
@@ -59,7 +60,7 @@ export class ArtistController {
     try {
       const artist = await this.artistService.findOne(id);
 
-      if (!artist) throw new NotFoundError();
+      if (!artist) throw new NotFoundError(Entity.Artist);
 
       return await this.artistService.update(artist, artistDto);
     } catch (error) {
@@ -73,7 +74,7 @@ export class ArtistController {
     try {
       const isDeleted = await this.artistService.remove(id);
 
-      if (!isDeleted) throw new NotFoundError();
+      if (!isDeleted) throw new NotFoundError(Entity.Artist);
 
       return;
     } catch (error) {

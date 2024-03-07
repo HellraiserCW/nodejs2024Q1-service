@@ -20,7 +20,7 @@ export class AlbumService {
     return await this.repositoryService.findAllAlbums();
   }
 
-  async findOne(id: string): Promise<Album> {
+  async findOne(id: string): Promise<Album | undefined> {
     return await this.repositoryService.findOneAlbumById(id);
   }
 

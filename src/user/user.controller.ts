@@ -1,14 +1,14 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Param,
+  ClassSerializerInterceptor,
+  Controller,
   Delete,
-  Put,
+  Get,
   HttpCode,
   HttpStatus,
-  ClassSerializerInterceptor,
+  Param,
+  Post,
+  Put,
   UseInterceptors,
 } from '@nestjs/common';
 
@@ -18,6 +18,7 @@ import { UpdateUserPasswordDto } from './dto/update-user-password.dto';
 import { UserEntity } from './entities/user.entity';
 import { NotFoundError, WrongPasswordError } from '../app.errors';
 import { Uuid } from '../app.validators';
+import { Entity } from '../app.config';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('user')
@@ -51,7 +52,7 @@ export class UserController {
     try {
       const user = await this.userService.findOne(id);
 
-      if (!user) throw new NotFoundError();
+      if (!user) throw new NotFoundError(Entity.User);
 
       return new UserEntity(user);
     } catch (error) {
@@ -67,7 +68,7 @@ export class UserController {
     try {
       const user = await this.userService.findOne(id);
 
-      if (!user) throw new NotFoundError();
+      if (!user) throw new NotFoundError(Entity.User);
 
       if (oldPassword !== user.password) throw new WrongPasswordError();
 
@@ -85,7 +86,7 @@ export class UserController {
     try {
       const isDeleted = await this.userService.remove(id);
 
-      if (!isDeleted) throw new NotFoundError();
+      if (!isDeleted) throw new NotFoundError(Entity.User);
 
       return;
     } catch (error) {

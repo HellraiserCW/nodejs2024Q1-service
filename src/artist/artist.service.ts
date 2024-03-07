@@ -20,7 +20,7 @@ export class ArtistService {
     return await this.repositoryService.findAllArtists();
   }
 
-  async findOne(id: string): Promise<Artist> {
+  async findOne(id: string): Promise<Artist | undefined> {
     return await this.repositoryService.findOneArtistById(id);
   }
 

@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 
-import { FavsConfig } from './favs/config/favs.config';
+import { Entity, Action } from './app.config';
 
 export class NotFoundError extends HttpException {
-  constructor() {
-    super('Not found!', HttpStatus.NOT_FOUND);
+  constructor(entity: Entity) {
+    super(`${entity.toUpperCase()} not found!`, HttpStatus.NOT_FOUND);
   }
 }
 
@@ -15,9 +15,9 @@ export class WrongPasswordError extends HttpException {
 }
 
 export class NotExistingError extends HttpException {
-  constructor(entity: FavsConfig) {
+  constructor(entity: Entity, action: Action) {
     super(
-      `Can't add non-existing ${entity} to favorites!`,
+      `Can't ${action} non-existing ${entity}!`,
       HttpStatus.UNPROCESSABLE_ENTITY,
     );
   }

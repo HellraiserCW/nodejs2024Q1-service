@@ -1,13 +1,13 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Put,
-  Param,
+  Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
+  Param,
+  Post,
+  Put,
 } from '@nestjs/common';
 
 import { AlbumService } from './album.service';
@@ -15,6 +15,7 @@ import { AlbumDto } from './dto/album.dto';
 import { Album } from './interfaces/album.interface';
 import { Uuid } from '../app.validators';
 import { NotFoundError } from '../app.errors';
+import { Entity } from '../app.config';
 
 @Controller('album')
 export class AlbumController {
@@ -43,7 +44,7 @@ export class AlbumController {
     try {
       const album = await this.albumService.findOne(id);
 
-      if (!album) throw new NotFoundError();
+      if (!album) throw new NotFoundError(Entity.Album);
 
       return album;
     } catch (error) {
@@ -59,7 +60,7 @@ export class AlbumController {
     try {
       const album = await this.albumService.findOne(id);
 
-      if (!album) throw new NotFoundError();
+      if (!album) throw new NotFoundError(Entity.Album);
 
       return await this.albumService.update(album, albumDto);
     } catch (error) {
@@ -73,7 +74,7 @@ export class AlbumController {
     try {
       const isDeleted = await this.albumService.remove(id);
 
-      if (!isDeleted) throw new NotFoundError();
+      if (!isDeleted) throw new NotFoundError(Entity.Album);
 
       return;
     } catch (error) {

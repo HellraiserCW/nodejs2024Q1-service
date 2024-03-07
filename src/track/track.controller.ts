@@ -1,13 +1,13 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Put,
-  Param,
+  Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
+  Param,
+  Post,
+  Put,
 } from '@nestjs/common';
 
 import { TrackService } from './track.service';
@@ -15,6 +15,7 @@ import { TrackDto } from './dto/track.dto';
 import { Track } from './interfaces/track.interface';
 import { Uuid } from '../app.validators';
 import { NotFoundError } from '../app.errors';
+import { Entity } from '../app.config';
 
 @Controller('track')
 export class TrackController {
@@ -43,7 +44,7 @@ export class TrackController {
     try {
       const track = await this.trackService.findOne(id);
 
-      if (!track) throw new NotFoundError();
+      if (!track) throw new NotFoundError(Entity.Track);
 
       return track;
     } catch (error) {
@@ -59,7 +60,7 @@ export class TrackController {
     try {
       const track = await this.trackService.findOne(id);
 
-      if (!track) throw new NotFoundError();
+      if (!track) throw new NotFoundError(Entity.Track);
 
       return await this.trackService.update(track, trackDto);
     } catch (error) {
@@ -73,7 +74,7 @@ export class TrackController {
     try {
       const isDeleted = await this.trackService.remove(id);
 
-      if (!isDeleted) throw new NotFoundError();
+      if (!isDeleted) throw new NotFoundError(Entity.Track);
 
       return;
     } catch (error) {
