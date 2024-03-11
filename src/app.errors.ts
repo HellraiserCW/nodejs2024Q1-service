@@ -4,7 +4,10 @@ import { Entity, Action } from './app.config';
 
 export class NotFoundError extends HttpException {
   constructor(entity: Entity) {
-    super(`${entity.toUpperCase()} not found!`, HttpStatus.NOT_FOUND);
+    super(
+      `${entity.charAt(0).toUpperCase() + entity.slice(1)} not found!`,
+      HttpStatus.NOT_FOUND,
+    );
   }
 }
 

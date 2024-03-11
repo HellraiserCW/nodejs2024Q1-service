@@ -3,7 +3,7 @@
 ## Prerequisites
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
-- Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
+- Node.js - [Download & Install Node.js LTS 20 version](https://nodejs.org/en/download/) and the npm package manager.
 
 ## Downloading
 
@@ -23,7 +23,7 @@ npm install
 npm start
 ```
 
-The app is starting on port 4000 as default, you can change this by setting another value for PORT variable in .env file 
+The app is starting on port 4000 as default, you can change this by setting another value for PORT variable after renaming `.env.example` to `.env` file 
 
 ## Testing
 
