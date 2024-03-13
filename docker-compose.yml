@@ -6,8 +6,12 @@ services:
     restart: unless-stopped
     depends_on:
       - postgres
+    volumes:
+      - ./src:/app/src
     ports:
       - ${PORT}:${PORT}
+    networks:
+      - ${NETWORK}
     environment:
       POSTGRES_HOST: ${POSTGRES_HOST}
       PORT: ${PORT}
@@ -18,9 +22,20 @@ services:
     container_name: 'postgres'
     build: ./database/
     restart: unless-stopped
+    volumes:
+      - ./db-data:/var/lib/postgresql/data
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    networks:
+      - ${NETWORK}
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+networks:
+  home-library-network:
+    driver: bridge
+    name: ${NETWORK}
+volumes:
+  app:
+  db-data:
