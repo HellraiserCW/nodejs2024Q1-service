@@ -33,11 +33,6 @@ Run application locally in dev mode:
 ```
 npm run start:dev
 ```
-Run application in docker:
-```
-npm run docker
-```
-
 To run application in docker and watch your working directory, you should start app by:
 ```
 npm run docker:dev
