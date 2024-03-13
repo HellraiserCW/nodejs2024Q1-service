@@ -1,0 +1,14 @@
+.git
+.idea
+.vscode
+/database
+/dist
+/doc
+/node_modules
+.dockerignore
+.env
+.env.example
+.eslintrc.js
+.gitignore
+.prettierrc
+README.md

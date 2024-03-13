@@ -1,4 +1,12 @@
-import { Controller, Delete, Get, HttpCode, HttpStatus, Param, Post } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+} from '@nestjs/common';
 
 import { FavsService } from './favs.service';
 import { ArtistService } from '../artist/artist.service';
