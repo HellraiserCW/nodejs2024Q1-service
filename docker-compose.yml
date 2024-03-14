@@ -1,8 +1,7 @@
 version: '3.8'
 services:
   app:
-#    container_name: api
-#    image: hellraisercw/home-library-api
+    image: hellraisercw/home-library-service
     build: .
     restart: unless-stopped
     develop:
@@ -27,8 +26,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
   postgres:
-#    container_name: postgres
-#    image: hellraisercw/home-library-postgres
+    image: hellraisercw/home-library-postgres
     build: ./database/
     restart: unless-stopped
     volumes:

@@ -40,6 +40,15 @@ npm run docker:dev
 
 ## Separate actions
 
+### Check for existing local docker images
+```
+docker image ls
+```
+
+### Stop running docker
+```
+docker compose stop
+```
 ### Stop running docker and remove containers
 ```
 docker compose down
@@ -55,7 +64,7 @@ npm run migration:revert
 ```
 
 ### Vulnerability
-You can scan images for vulnerabilities after docker is running
+You can scan existing images for vulnerabilities
 ```
 npm run docker:scan
 ```
