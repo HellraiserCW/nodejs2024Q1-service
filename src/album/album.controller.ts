@@ -76,7 +76,7 @@ export class AlbumController {
 
       if (!isAlbum) throw new NotFoundError(Entity.Album);
 
-      await this.albumService.remove(id);
+      return await this.albumService.remove(id);
     } catch (error) {
       throw error;
     }

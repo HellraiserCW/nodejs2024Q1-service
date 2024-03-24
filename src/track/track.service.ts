@@ -10,28 +10,28 @@ export class TrackService {
   constructor(private readonly repositoryService: RepositoryService) {}
 
   async create(dto: TrackDto): Promise<Track> {
-    return await this.repositoryService.createTrack({
-      ...dto,
-      id: uuidv4(),
-    });
+    const track = this.repositoryService.trackRepository.create(dto);
+
+    return await this.repositoryService.trackRepository.save(track);
   }
 
   async findAll(): Promise<Track[]> {
-    return await this.repositoryService.findAllTracks();
+    return await this.repositoryService.trackRepository.find();
   }
 
   async findOne(id: string): Promise<Track | undefined> {
-    return await this.repositoryService.findOneTrackById(id);
-  }
-
-  async update(track: Track, dto: TrackDto): Promise<Track> {
-    return this.repositoryService.updateTrack({
-      ...track,
-      ...dto,
+    return await this.repositoryService.trackRepository.findOne({
+      where: { id },
     });
   }
 
-  async remove(id: string): Promise<boolean> {
-    return this.repositoryService.deleteTrack(id);
+  async update(id: string, dto: TrackDto): Promise<Track> {
+    await this.repositoryService.trackRepository.update(id, dto);
+
+    return await this.findOne(id);
+  }
+
+  async remove(id: string): Promise<void> {
+    await this.repositoryService.trackRepository.delete(id);
   }
 }

@@ -82,7 +82,7 @@ export class UserController {
 
       if (!isUser) throw new NotFoundError(Entity.User);
 
-      await this.userService.remove(id);
+      return await this.userService.remove(id);
     } catch (error) {
       throw error;
     }

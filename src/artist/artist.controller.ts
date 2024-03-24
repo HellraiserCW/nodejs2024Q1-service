@@ -76,7 +76,7 @@ export class ArtistController {
 
       if (!isArtist) throw new NotFoundError(Entity.Artist);
 
-      await this.artistService.remove(id);
+      return await this.artistService.remove(id);
     } catch (error) {
       throw error;
     }

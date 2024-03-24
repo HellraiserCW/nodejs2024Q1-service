@@ -62,7 +62,7 @@ export class TrackController {
 
       if (!track) throw new NotFoundError(Entity.Track);
 
-      return await this.trackService.update(track, trackDto);
+      return await this.trackService.update(id, trackDto);
     } catch (error) {
       throw error;
     }
@@ -72,11 +72,11 @@ export class TrackController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@Param() { id }: Uuid): Promise<void> {
     try {
-      const isDeleted = await this.trackService.remove(id);
+      const isTrack = await this.trackService.findOne(id);
 
-      if (!isDeleted) throw new NotFoundError(Entity.Track);
+      if (!isTrack) throw new NotFoundError(Entity.Track);
 
-      return;
+      return await this.trackService.remove(id);
     } catch (error) {
       throw error;
     }
