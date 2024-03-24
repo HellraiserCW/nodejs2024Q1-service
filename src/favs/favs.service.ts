@@ -12,35 +12,51 @@ export class FavsService {
 
   async findAll(): Promise<FavoritesResponse> {
     const [artists, albums, tracks] = await Promise.all([
-      this.repositoryService.findFavArtists(),
-      this.repositoryService.findFavAlbums(),
-      this.repositoryService.findFavTracks(),
+      this.repositoryService.artistFavRepository.find({
+        relations: { artist: true },
+      }),
+      this.repositoryService.albumFavRepository.find({
+        relations: { album: true },
+      }),
+      this.repositoryService.trackFavRepository.find({
+        relations: { track: true },
+      }),
     ]);
 
-    return { artists, albums, tracks };
+    return {
+      artists: artists.map((artistFav) => artistFav.artist),
+      albums: albums.map((albumFav) => albumFav.album),
+      tracks: tracks.map((trackFav) => trackFav.track),
+    };
   }
 
-  async addTrack(id: string): Promise<Track> {
-    return this.repositoryService.addTrackToFav(id);
+  async addTrack(id: string): Promise<void> {
+    const favTrack = this.repositoryService.trackFavRepository.create({ trackId: id });
+
+    await this.repositoryService.trackFavRepository.save(favTrack);
   }
 
-  async removeTrack(id: string): Promise<boolean> {
-    return this.repositoryService.removeTrackFromFav(id);
+  async removeTrack(track: Track): Promise<void> {
+    await this.repositoryService.trackFavRepository.delete(track);
   }
 
-  async addArtist(id: string): Promise<Artist> {
-    return this.repositoryService.addArtistToFav(id);
+  async addArtist(id: string): Promise<void> {
+    const favArtist = this.repositoryService.artistFavRepository.create({ artistId: id });
+
+    await this.repositoryService.artistFavRepository.save(favArtist);
   }
 
-  async removeArtist(id: string): Promise<boolean> {
-    return this.repositoryService.removeArtistFromFav(id);
+  async removeArtist(artist: Artist): Promise<void> {
+    await this.repositoryService.artistFavRepository.delete(artist);
   }
 
-  async addAlbum(id: string): Promise<Album> {
-    return this.repositoryService.addAlbumToFav(id);
+  async addAlbum(id: string): Promise<void> {
+    const favAlbum = this.repositoryService.albumFavRepository.create({ albumId: id });
+
+    await this.repositoryService.albumFavRepository.save(favAlbum);
   }
 
-  async removeAlbum(id: string): Promise<boolean> {
-    return this.repositoryService.removeAlbumFromFav(id);
+  async removeAlbum(album: Album): Promise<void> {
+    await this.repositoryService.albumFavRepository.delete(album);
   }
 }
