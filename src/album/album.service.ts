@@ -10,28 +10,28 @@ export class AlbumService {
   constructor(private readonly repositoryService: RepositoryService) {}
 
   async create(dto: AlbumDto): Promise<Album> {
-    return await this.repositoryService.createAlbum({
-      ...dto,
-      id: uuidv4(),
-    });
+    const album = this.repositoryService.albumRepository.create(dto);
+
+    return await this.repositoryService.albumRepository.save(album);
   }
 
   async findAll(): Promise<Album[]> {
-    return await this.repositoryService.findAllAlbums();
+    return await this.repositoryService.albumRepository.find();
   }
 
   async findOne(id: string): Promise<Album | undefined> {
-    return await this.repositoryService.findOneAlbumById(id);
-  }
-
-  async update(album: Album, dto: AlbumDto): Promise<Album> {
-    return this.repositoryService.updateAlbum({
-      ...album,
-      ...dto,
+    return await this.repositoryService.albumRepository.findOne({
+      where: { id },
     });
   }
 
-  async remove(id: string): Promise<boolean> {
-    return this.repositoryService.deleteAlbum(id);
+  async update(id: string, dto: AlbumDto): Promise<Album> {
+    await this.repositoryService.albumRepository.update(id, dto);
+
+    return await this.findOne(id);
+  }
+
+  async remove(id: string): Promise<void> {
+    await this.repositoryService.albumRepository.delete(id);
   }
 }

@@ -62,7 +62,7 @@ export class AlbumController {
 
       if (!album) throw new NotFoundError(Entity.Album);
 
-      return await this.albumService.update(album, albumDto);
+      return await this.albumService.update(id, albumDto);
     } catch (error) {
       throw error;
     }
@@ -72,11 +72,11 @@ export class AlbumController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@Param() { id }: Uuid): Promise<void> {
     try {
-      const isDeleted = await this.albumService.remove(id);
+      const isAlbum = await this.albumService.findOne(id);
 
-      if (!isDeleted) throw new NotFoundError(Entity.Album);
+      if (!isAlbum) throw new NotFoundError(Entity.Album);
 
-      return;
+      await this.albumService.remove(id);
     } catch (error) {
       throw error;
     }
