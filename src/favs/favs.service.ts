@@ -2,9 +2,8 @@ import { Injectable } from '@nestjs/common';
 
 import { FavoritesResponse } from './interfaces/favs.interface';
 import { RepositoryService } from '../repository/repository.service';
-import { Track } from '../track/interfaces/track.interface';
-import { Artist } from '../artist/interfaces/artist.interface';
-import { Album } from '../album/interfaces/album.interface';
+import { NotExistingError } from '../app.errors';
+import { Action, Entity } from '../app.config';
 
 @Injectable()
 export class FavsService {
@@ -31,32 +30,74 @@ export class FavsService {
   }
 
   async addTrack(id: string): Promise<void> {
-    const favTrack = this.repositoryService.trackFavRepository.create({ trackId: id });
+    const track = await this.repositoryService.trackRepository.findOne({
+      where: { id },
+    });
+
+    if (!track) throw new NotExistingError(Entity.Track, Action.Add);
+
+    const favTrack = this.repositoryService.trackFavRepository.create({
+      trackId: id,
+    });
 
     await this.repositoryService.trackFavRepository.save(favTrack);
   }
 
-  async removeTrack(track: Track): Promise<void> {
+  async removeTrack(id: string): Promise<void> {
+    const track = await this.repositoryService.trackFavRepository.findOne({
+      where: { trackId: id },
+    });
+
+    if (!track) throw new NotExistingError(Entity.Track, Action.Remove);
+
     await this.repositoryService.trackFavRepository.delete(track);
   }
 
   async addArtist(id: string): Promise<void> {
-    const favArtist = this.repositoryService.artistFavRepository.create({ artistId: id });
+    const artist = await this.repositoryService.artistRepository.findOne({
+      where: { id },
+    });
+
+    if (!artist) throw new NotExistingError(Entity.Artist, Action.Add);
+
+    const favArtist = this.repositoryService.artistFavRepository.create({
+      artistId: id,
+    });
 
     await this.repositoryService.artistFavRepository.save(favArtist);
   }
 
-  async removeArtist(artist: Artist): Promise<void> {
+  async removeArtist(id: string): Promise<void> {
+    const artist = await this.repositoryService.artistFavRepository.findOne({
+      where: { artistId: id },
+    });
+
+    if (!artist) throw new NotExistingError(Entity.Artist, Action.Remove);
+
     await this.repositoryService.artistFavRepository.delete(artist);
   }
 
   async addAlbum(id: string): Promise<void> {
-    const favAlbum = this.repositoryService.albumFavRepository.create({ albumId: id });
+    const album = await this.repositoryService.albumRepository.findOne({
+      where: { id },
+    });
+
+    if (!album) throw new NotExistingError(Entity.Album, Action.Add);
+
+    const favAlbum = this.repositoryService.albumFavRepository.create({
+      albumId: id,
+    });
 
     await this.repositoryService.albumFavRepository.save(favAlbum);
   }
 
-  async removeAlbum(album: Album): Promise<void> {
+  async removeAlbum(id: string): Promise<void> {
+    const album = await this.repositoryService.albumFavRepository.findOne({
+      where: { albumId: id },
+    });
+
+    if (!album) throw new NotExistingError(Entity.Album, Action.Remove);
+
     await this.repositoryService.albumFavRepository.delete(album);
   }
 }

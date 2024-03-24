@@ -10,7 +10,6 @@ import { TrackFav } from '../favs/entities/trackFav.entity';
 import { ArtistFav } from '../favs/entities/artistFav.entity';
 import { AlbumFav } from '../favs/entities/albumFav.entity';
 
-
 @Injectable()
 export class RepositoryService {
   public readonly artistRepository: Repository<ArtistEntity>;

@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
 
 import { AlbumDto } from './dto/album.dto';
 import { RepositoryService } from '../repository/repository.service';
