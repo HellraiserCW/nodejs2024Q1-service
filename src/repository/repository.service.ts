@@ -3,6 +3,8 @@ import { Repository } from 'typeorm';
 
 import { dataSource } from './orm.config';
 import { UserEntity } from '../user/entities/user.entity';
+import { ArtistEntity } from '../artist/entities/artist.entity';
+import { AlbumEntity } from '../album/entities/album.entity';
 
 
 @Injectable()

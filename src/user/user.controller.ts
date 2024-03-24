@@ -28,9 +28,7 @@ export class UserController {
   @Post()
   async create(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
     try {
-      const user = await this.userService.create(createUserDto);
-
-      return new UserEntity(user);
+      return await this.userService.create(createUserDto);
     } catch (error) {
       throw error;
     }
@@ -39,9 +37,7 @@ export class UserController {
   @Get()
   async findAll(): Promise<UserEntity[]> {
     try {
-      const users = await this.userService.findAll();
-
-      return users.map((user) => new UserEntity(user));
+      return await this.userService.findAll();
     } catch (error) {
       throw error;
     }
@@ -54,7 +50,7 @@ export class UserController {
 
       if (!user) throw new NotFoundError(Entity.User);
 
-      return new UserEntity(user);
+      return user;
     } catch (error) {
       throw error;
     }
@@ -72,9 +68,7 @@ export class UserController {
 
       if (oldPassword !== user.password) throw new WrongPasswordError();
 
-      const updatedUser = await this.userService.update(id, newPassword);
-
-      return new UserEntity(updatedUser);
+      return await this.userService.update(id, newPassword);
     } catch (error) {
       throw error;
     }
@@ -84,9 +78,9 @@ export class UserController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@Param() { id }: Uuid): Promise<void> {
     try {
-      const isDeleted = await this.userService.findOne(id);
+      const isUser = await this.userService.findOne(id);
 
-      if (!isDeleted) throw new NotFoundError(Entity.User);
+      if (!isUser) throw new NotFoundError(Entity.User);
 
       await this.userService.remove(id);
     } catch (error) {

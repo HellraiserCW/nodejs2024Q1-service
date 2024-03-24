@@ -62,7 +62,7 @@ export class ArtistController {
 
       if (!artist) throw new NotFoundError(Entity.Artist);
 
-      return await this.artistService.update(artist, artistDto);
+      return await this.artistService.update(id, artistDto);
     } catch (error) {
       throw error;
     }
@@ -72,11 +72,11 @@ export class ArtistController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@Param() { id }: Uuid): Promise<void> {
     try {
-      const isDeleted = await this.artistService.remove(id);
+      const isArtist = await this.artistService.findOne(id);
 
-      if (!isDeleted) throw new NotFoundError(Entity.Artist);
+      if (!isArtist) throw new NotFoundError(Entity.Artist);
 
-      return;
+      await this.artistService.remove(id);
     } catch (error) {
       throw error;
     }
