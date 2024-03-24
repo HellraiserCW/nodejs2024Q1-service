@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { RepositoryService } from '../repository/repository.service';
@@ -10,35 +9,32 @@ export class UserService {
   constructor(private readonly repositoryService: RepositoryService) {}
 
   async create(dto: CreateUserDto): Promise<User> {
-    const createdAt = Date.now();
+    const user = this.repositoryService.userRepository.create(dto);
 
-    return await this.repositoryService.createUser({
-      ...dto,
-      id: uuidv4(),
-      version: 1,
-      createdAt,
-      updatedAt: createdAt,
-    });
+    return await this.repositoryService.userRepository.save(user);
   }
 
   async findAll(): Promise<User[]> {
-    return await this.repositoryService.findAllUsers();
+    return await this.repositoryService.userRepository.find();
   }
 
-  async findOne(id: string): Promise<User | undefined> {
-    return await this.repositoryService.findOneUserById(id);
-  }
-
-  async update(user: User, password: string): Promise<User> {
-    return this.repositoryService.updateUser({
-      ...user,
-      password,
-      version: ++user.version,
-      updatedAt: Date.now(),
+  async findOne(id: string): Promise<User | null> {
+    return await this.repositoryService.userRepository.findOne({
+      where: {
+        id,
+      },
     });
   }
 
-  async remove(id: string): Promise<boolean> {
-    return this.repositoryService.deleteUser(id);
+  async update(id: string, newPassword: string): Promise<User> {
+    await this.repositoryService.userRepository.update(id, {
+      password: newPassword,
+    });
+
+    return await this.findOne(id);
+  }
+
+  async remove(id: string): Promise<void> {
+    await this.repositoryService.userRepository.delete(id);
   }
 }

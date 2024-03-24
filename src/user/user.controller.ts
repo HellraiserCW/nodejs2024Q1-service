@@ -72,7 +72,7 @@ export class UserController {
 
       if (oldPassword !== user.password) throw new WrongPasswordError();
 
-      const updatedUser = await this.userService.update(user, newPassword);
+      const updatedUser = await this.userService.update(id, newPassword);
 
       return new UserEntity(updatedUser);
     } catch (error) {
@@ -84,11 +84,11 @@ export class UserController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@Param() { id }: Uuid): Promise<void> {
     try {
-      const isDeleted = await this.userService.remove(id);
+      const isDeleted = await this.userService.findOne(id);
 
       if (!isDeleted) throw new NotFoundError(Entity.User);
 
-      return;
+      await this.userService.remove(id);
     } catch (error) {
       throw error;
     }

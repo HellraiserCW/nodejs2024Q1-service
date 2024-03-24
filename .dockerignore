@@ -11,5 +11,4 @@
 .env.example
 .eslintrc.js
 .gitignore
-.prettierrc
 README.md

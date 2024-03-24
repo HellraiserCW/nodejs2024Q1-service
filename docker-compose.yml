@@ -3,6 +3,7 @@ services:
   app:
     image: hellraisercw/home-library-service
     build: .
+    container_name: app
     restart: unless-stopped
     develop:
       watch:
@@ -28,6 +29,7 @@ services:
   postgres:
     image: hellraisercw/home-library-postgres
     build: ./database/
+    container_name: postgres
     restart: unless-stopped
     volumes:
       - db-data:/var/lib/postgresql/data
