@@ -15,7 +15,7 @@ git clone https://github.com/HellraiserCW/nodejs2024Q1-service.git
 cd nodejs2024Q1-service
 ```
 ```
-git checkout docker-prisma-postgres
+git checkout -b docker-prisma-postgres origin/docker-prisma-postgres
 ```
 
 ## Installing NPM modules
@@ -36,7 +36,7 @@ Run application locally in dev mode:
 ```
 npm run start:dev
 ```
-To run application in docker and watch your working directory, you should start app by:
+To run application in docker and watch your working directory, you should start app after launching Docker Desktop by:
 ```
 npm run docker:dev
 ```
@@ -65,9 +65,7 @@ npm run docker:scan
 
 ### Testing
 
-After application is running open new terminal and enter:
-
-To run all tests without authorization
+To run all tests after application is running open new terminal and enter:
 
 ```
 npm run test
