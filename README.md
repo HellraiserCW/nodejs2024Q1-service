@@ -14,6 +14,9 @@ git clone https://github.com/HellraiserCW/nodejs2024Q1-service.git
 ```
 cd nodejs2024Q1-service
 ```
+```
+git checkout docker-prisma-postgres
+```
 
 ## Installing NPM modules
 
@@ -54,15 +57,6 @@ docker compose stop
 docker compose down
 ```
 
-### Migrations
-Migrations runs automatically on docker start. Scripts for manual migrations process:
-```
-npm run migration:create
-npm run migration:generate
-npm run migration:run
-npm run migration:revert
-```
-
 ### Vulnerability
 You can scan existing images for vulnerabilities
 ```
@@ -71,7 +65,7 @@ npm run docker:scan
 
 ### Testing
 
-After application running open new terminal and enter:
+After application is running open new terminal and enter:
 
 To run all tests without authorization
 

@@ -1,11 +1,18 @@
-FROM node:20.11-alpine3.19 as build
-WORKDIR /user/app
+FROM node:20.11-alpine3.19 as predev
+WORKDIR /usr/app
 COPY package*.json .
-RUN npm install
+RUN npm i
+
+FROM node:20.11-alpine3.19 as dev
+WORKDIR /usr/app
+COPY --from=predev /usr/app/package*.json .
+RUN npm ci
 COPY . .
 
-FROM node:20.11-alpine3.19
-WORKDIR /user/app
-COPY --from=build /user/app /user/app
-EXPOSE 4000
-CMD ["npm", "run", "start:dev"]
+FROM node:20.11-alpine3.19 as build
+WORKDIR /usr/app
+COPY --from=dev /usr/app/package*.json .
+COPY --from=dev /usr/app/node_modules ./node_modules
+COPY . .
+
+CMD npm run typeorm -- migration:run && npm run start:dev

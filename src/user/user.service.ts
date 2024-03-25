@@ -1,40 +1,67 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
-import { CreateUserDto } from './dto/create-user.dto';
-import { RepositoryService } from '../repository/repository.service';
-import { User } from './interfaces/user.interface';
+import { CreateUserDto, User, UpdateUserDto } from 'src/models';
+import { UserEntity } from './user.entity';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly repositoryService: RepositoryService) {}
+  constructor(
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
+  ) {}
 
-  async create(dto: CreateUserDto): Promise<User> {
-    const user = this.repositoryService.userRepository.create(dto);
-
-    return await this.repositoryService.userRepository.save(user);
+  async getAll(): Promise<User[]> {
+    const users = await this.userRepository.find();
+    return users.map(this.buildResponse);
   }
 
-  async findAll(): Promise<User[]> {
-    return await this.repositoryService.userRepository.find();
+  async getOneById(id: string): Promise<User> {
+    const user = await this.userRepository.findOneBy({ id });
+    if (!user) {
+      throw new NotFoundException("User doesn't exist!");
+    }
+    return this.buildResponse(user);
   }
 
-  async findOne(id: string): Promise<User | null> {
-    return await this.repositoryService.userRepository.findOne({
-      where: {
-        id,
-      },
-    });
+  async add(dto: CreateUserDto): Promise<User> {
+    const user = await this.userRepository.save(
+      this.userRepository.create(dto),
+    );
+    return this.buildResponse(user);
   }
 
-  async update(id: string, newPassword: string): Promise<User> {
-    await this.repositoryService.userRepository.update(id, {
-      password: newPassword,
-    });
-
-    return await this.findOne(id);
+  async changePassword(id: string, dto: UpdateUserDto): Promise<User> {
+    const user = await this.userRepository.findOneBy({ id });
+    if (!user) {
+      throw new NotFoundException("User doesn't exist!");
+    }
+    if (user.password !== dto.oldPassword) {
+      throw new ForbiddenException("Password doesn't match!");
+    }
+    await this.userRepository.save(
+      Object.assign(user, { password: dto.newPassword }),
+    );
+    return this.buildResponse(user);
   }
 
-  async remove(id: string): Promise<void> {
-    await this.repositoryService.userRepository.delete(id);
+  async delete(id: string) {
+    await this.getOneById(id);
+    await this.userRepository.delete(id);
+  }
+
+  private buildResponse(entity: UserEntity): User {
+    const user: User = {
+      ...entity,
+      createdAt: entity.createdAt.getTime(),
+      updatedAt: entity.updatedAt.getTime(),
+    };
+    delete user.password;
+    return user;
   }
 }

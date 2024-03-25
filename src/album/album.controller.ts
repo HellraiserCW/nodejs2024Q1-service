@@ -6,79 +6,44 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
 } from '@nestjs/common';
 
 import { AlbumService } from './album.service';
-import { AlbumDto } from './dto/album.dto';
-import { Album } from './interfaces/album.interface';
-import { Uuid } from '../app.validators';
-import { NotFoundError } from '../app.errors';
-import { Entity } from '../app.config';
+import { CreateAlbumDto, Album, UpdateAlbumDto } from 'src/models';
 
 @Controller('album')
 export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}
 
-  @Post()
-  async create(@Body() albumDto: AlbumDto): Promise<Album> {
-    try {
-      return await this.albumService.create(albumDto);
-    } catch (error) {
-      throw error;
-    }
-  }
-
   @Get()
-  async findAll(): Promise<Album[]> {
-    try {
-      return await this.albumService.findAll();
-    } catch (error) {
-      throw error;
-    }
+  getAll(): Promise<Album[]> {
+    return this.albumService.getAll();
   }
 
+  @HttpCode(HttpStatus.OK)
   @Get(':id')
-  async findOne(@Param() { id }: Uuid): Promise<Album> {
-    try {
-      const album = await this.albumService.findOne(id);
-
-      if (!album) throw new NotFoundError(Entity.Album);
-
-      return album;
-    } catch (error) {
-      throw error;
-    }
+  getOneById(@Param('id', ParseUUIDPipe) id: string): Promise<Album> {
+    return this.albumService.getOneById(id);
   }
 
+  @HttpCode(HttpStatus.CREATED)
+  @Post()
+  create(@Body() dto: CreateAlbumDto) {
+    return this.albumService.add(dto);
+  }
+
+  @HttpCode(HttpStatus.OK)
   @Put(':id')
-  async update(
-    @Param() { id }: Uuid,
-    @Body() albumDto: AlbumDto,
-  ): Promise<Album> {
-    try {
-      const album = await this.albumService.findOne(id);
-
-      if (!album) throw new NotFoundError(Entity.Album);
-
-      return await this.albumService.update(id, albumDto);
-    } catch (error) {
-      throw error;
-    }
+  update(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdateAlbumDto) {
+    return this.albumService.update(id, dto);
   }
 
-  @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param() { id }: Uuid): Promise<void> {
-    try {
-      const isAlbum = await this.albumService.findOne(id);
-
-      if (!isAlbum) throw new NotFoundError(Entity.Album);
-
-      return await this.albumService.remove(id);
-    } catch (error) {
-      throw error;
-    }
+  @Delete(':id')
+  delete(@Param('id', ParseUUIDPipe) id: string) {
+    return this.albumService.delete(id);
   }
 }

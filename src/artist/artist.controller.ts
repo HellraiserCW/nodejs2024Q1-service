@@ -6,79 +6,44 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
 } from '@nestjs/common';
 
 import { ArtistService } from './artist.service';
-import { ArtistDto } from './dto/artist.dto';
-import { Uuid } from '../app.validators';
-import { Artist } from './interfaces/artist.interface';
-import { NotFoundError } from '../app.errors';
-import { Entity } from '../app.config';
+import { CreateArtistDto, Artist, UpdateArtistDto } from 'src/models';
 
 @Controller('artist')
 export class ArtistController {
   constructor(private readonly artistService: ArtistService) {}
 
-  @Post()
-  async create(@Body() artistDto: ArtistDto): Promise<Artist> {
-    try {
-      return await this.artistService.create(artistDto);
-    } catch (error) {
-      throw error;
-    }
-  }
-
   @Get()
-  async findAll(): Promise<Artist[]> {
-    try {
-      return await this.artistService.findAll();
-    } catch (error) {
-      throw error;
-    }
+  getAll(): Promise<Artist[]> {
+    return this.artistService.getAll();
   }
 
+  @HttpCode(HttpStatus.OK)
   @Get(':id')
-  async findOne(@Param() { id }: Uuid): Promise<Artist> {
-    try {
-      const artist = await this.artistService.findOne(id);
-
-      if (!artist) throw new NotFoundError(Entity.Artist);
-
-      return artist;
-    } catch (error) {
-      throw error;
-    }
+  getOneById(@Param('id', ParseUUIDPipe) id: string): Promise<Artist> {
+    return this.artistService.getOneById(id);
   }
 
+  @HttpCode(HttpStatus.CREATED)
+  @Post()
+  create(@Body() dto: CreateArtistDto) {
+    return this.artistService.add(dto);
+  }
+
+  @HttpCode(HttpStatus.OK)
   @Put(':id')
-  async update(
-    @Param() { id }: Uuid,
-    @Body() artistDto: ArtistDto,
-  ): Promise<Artist> {
-    try {
-      const artist = await this.artistService.findOne(id);
-
-      if (!artist) throw new NotFoundError(Entity.Artist);
-
-      return await this.artistService.update(id, artistDto);
-    } catch (error) {
-      throw error;
-    }
+  update(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdateArtistDto) {
+    return this.artistService.update(id, dto);
   }
 
-  @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param() { id }: Uuid): Promise<void> {
-    try {
-      const isArtist = await this.artistService.findOne(id);
-
-      if (!isArtist) throw new NotFoundError(Entity.Artist);
-
-      return await this.artistService.remove(id);
-    } catch (error) {
-      throw error;
-    }
+  @Delete(':id')
+  delete(@Param('id', ParseUUIDPipe) id: string) {
+    return this.artistService.delete(id);
   }
 }
