@@ -1,0 +1,53 @@
+version: '3.8'
+services:
+  database:
+    container_name: database
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - ${POSTGRES_PORT}:${DEFAULT_POSTGRES_PORT}
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+      - pg-logs:/var/log/postgresql
+    restart: unless-stopped
+    networks:
+      - ${NETWORK}
+
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /usr/app/src
+    env_file:
+      - .env
+    environment:
+      POSTGRES_HOST: database
+      POSTGRES_PORT: ${DEFAULT_POSTGRES_PORT}
+    depends_on:
+      - database
+    ports:
+      - ${PORT}:${PORT}
+    restart: unless-stopped
+    working_dir: /usr/app
+    networks:
+      - ${NETWORK}
+
+networks:
+  app-net:
+    name: ${NETWORK}
+    driver: ${DRIVER}
+
+volumes:
+  pg-data:
+  pg-logs:
