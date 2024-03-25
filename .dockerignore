@@ -8,7 +8,7 @@
 /node_modules
 .dockerignore
 .env
-.env.example
+.env
 .eslintrc.js
 .gitignore
 README.md

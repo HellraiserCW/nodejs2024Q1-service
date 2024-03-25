@@ -14,14 +14,14 @@ services:
         - action: rebuild
           path: package.json
     depends_on:
-      - db
+      - postgres
     ports:
       - ${PORT}:${PORT}
     networks:
       - ${NETWORK}
     env_file:
       - .env
-  db:
+  postgres:
     build: ./database/
     container_name: postgres
     restart: unless-stopped

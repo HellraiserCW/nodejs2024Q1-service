@@ -9,7 +9,7 @@
 ## Downloading
 
 ```
-git clone git@github.com:HellraiserCW/nodejs2024Q1-service.git
+git clone https://github.com/HellraiserCW/nodejs2024Q1-service.git
 ```
 ```
 cd nodejs2024Q1-service
