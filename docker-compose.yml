@@ -1,7 +1,6 @@
 version: '3.8'
 services:
   app:
-    image: hellraisercw/home-library-service
     build: .
     container_name: app
     restart: unless-stopped
@@ -15,25 +14,19 @@ services:
         - action: rebuild
           path: package.json
     depends_on:
-      - postgres
+      - db
     ports:
       - ${PORT}:${PORT}
     networks:
       - ${NETWORK}
-    environment:
-      POSTGRES_HOST: ${POSTGRES_HOST}
-      PORT: ${PORT}
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-  postgres:
-    image: hellraisercw/home-library-postgres
+    env_file:
+      - .env
+  db:
     build: ./database/
     container_name: postgres
     restart: unless-stopped
     volumes:
       - db-data:/var/lib/postgresql/data
-      - db-logs:/var/lib/postgresql/log
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     networks:
@@ -54,4 +47,4 @@ networks:
           gateway: '192.168.0.1'
 volumes:
   db-data:
-  db-logs:
+    driver: local

@@ -34,11 +34,6 @@ export class UserEntity implements User {
   updatedAt: number;
 
   constructor(partial: Partial<UserEntity>) {
-    this.id = partial.id;
-    this.login = partial.login;
-    this.password = partial.password;
-    this.version = partial.version;
-    this.createdAt = partial.createdAt;
-    this.updatedAt = partial.updatedAt;
+    Object.assign(this, partial);
   }
 }
